@@ -1,26 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
+import GithubContext from "../../context/github/GithubContext";
 import Spinner from "../layout/Spinner";
 import UserItem from "./UserItem";
 
 const UserResult = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    const response = await fetch(`${process.env.REACT_APP_GITHUB_URL}/users`, {
-      mode: "cors",
-      headers: {
-        Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN}`,
-      },
-    });
-    const data = await response.json();
-    setUsers(data);
-    setLoading(false);
-  };
+  const { users, loading } = useContext(GithubContext);
 
   if (!loading) {
     return (
@@ -28,7 +12,6 @@ const UserResult = () => {
         {users.map((user) => (
           <UserItem key={user.id} user={user} />
         ))}
-        UserResult
       </div>
     );
   } else {
